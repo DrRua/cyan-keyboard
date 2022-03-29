@@ -1,0 +1,187 @@
+.menu-box {
+
+  z-index: var(--menu-z);
+  position: absolute;
+  left: 0;
+  top: var(--header-height);
+  width: 200px;
+  height: calc(100% - var(--header-height));
+  padding: 16px;
+  background-color: var(--main-container-bg);
+  // overflow-x: hidden;
+  overflow-y: auto;
+  transition: width 0.3s ease-in-out, background 0.3s ease-in-out;
+  box-shadow: rgba(100, 100, 111, 0.1) 0px 4px 14px 0px;
+  user-select: none;
+
+  .sidebar-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .sidebar-themeContainer {
+      padding: 4px;
+      border-radius: 4px;
+      color: var(--menu-text-color);
+      overflow: hidden;
+      background-color: var(--main-bg-color);
+      overflow: hidden;
+      flex-shrink: 0;
+      transition: color 0.2s ease-in-out, background 0.2s ease-in-out;
+
+      .sidebar-themeLabel {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        cursor: pointer;
+
+        &::before {
+          content: '';
+          position: absolute;
+          z-index: 0;
+          display: inline-block;
+          width: calc(50% - 2px);
+          height: calc(100% - 4px);
+          border-radius: 4px;
+          background-color: var(--main-container-bg);
+          left: 2px;
+          top: 50%;
+          transform: translatey(-50%);
+          transition: left 0.3s ease;
+        }
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        .sidebar-themeType {
+          width: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 12px 8px;
+          text-align: center;
+          z-index: 1;
+          flex-shrink: 0;
+          line-height: 20px;
+        }
+      }
+    }
+
+    .sidebar-list {
+      .sidebar-item {
+        padding: 8px 0;
+
+        .item-box {
+          width: 100%;
+          padding: 20px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          transition: color 0.2s ease-in-out, background 0.2s ease-in-out, border 0.2s ease-in-out;
+
+          &.active {
+            background-color: var(--main-bg-color);
+          }
+
+          &:not(.active):hover {
+            background-color: var(--menu-hover-color);
+          }
+
+          .sidebar-listIcon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 12px;
+            flex-shrink: 0;
+          }
+
+          .menu-label {
+            margin-bottom: 2px;
+            font-family: wanju, KaiTi;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+
+      .sidebar-item+.sidebar-item {
+        border-top: 1px solid var(--menu-hover-color);
+      }
+    }
+
+    .sidebar-profile {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: auto;
+      border: 1px solid var(--main-bg-color);
+      padding: 8px 10px;
+      border-radius: 28px;
+      overflow: hidden;
+      height: 60px;
+      flex-shrink: 0;
+      transition: background 0.3s ease-in-out;
+      cursor: pointer;
+
+      .text {
+        margin-left: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--menu-text-color);
+      }
+    }
+  }
+
+  &.dark {
+    --main-container-bg: #131c31;
+    --menu-text-color: #fff;
+    --main-bg-color: #00071d;
+
+    .sidebar-themeLabel {
+      &::before {
+        left: 50% !important;
+      }
+    }
+
+    .sidebar-item {
+      color: var(--menu-text-color);
+
+      .item-box:not(.active):hover {
+        background-color: #1c2339 !important;
+      }
+    }
+
+    .sidebar-item+.sidebar-item {
+      border-top-color: #1c2339 !important;
+    }
+
+    .sidebar-profile {
+      background-color: #1c2339 !important;
+    }
+  }
+
+  &.shrink {
+    width: 90px;
+
+    .text {
+      display: none;
+    }
+    .menu-label {
+      visibility: hidden;
+    }
+
+    .sidebar-themeType {
+      width: 100% !important;
+    }
+
+    .sidebar-themeLabel:before {
+      left: 2px !important;
+      width: calc(100% - 4px) !important;
+    }
+  }
+}
