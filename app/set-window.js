@@ -7,7 +7,7 @@ const path = require('path')
 const isDev = process.env.IS_DEV == 'true' ? true : false
 
 // assets目录路径需配合package.json > extraassets > to 打包路径(打包后固定在resources/路径后)
-const iconPath = isDev ? 'assets/mocan.ico' : 'resources/assets/mocan.ico'
+const iconPath = isDev ? 'app/assets/mocan.ico' : 'resources/assets/mocan.ico'
 
 // loading窗口
 let loading
@@ -48,7 +48,7 @@ const createWindow = () => {
   win.loadURL(
     isDev
       ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../dist/index.html')}`
+      : `file://${path.join(__dirname, 'dist/index.html')}`
   )
 
   // 页面可加载时显示窗口（控制白屏）
@@ -111,7 +111,7 @@ const showLoading = () => {
   })
   // 设置任务栏图标
   loading.setIcon(nativeImage.createFromPath(iconPath))
-  loading.loadFile(isDev ? './electron/loading.html' : path.join(__dirname, '../electron/loading.html'))
+  loading.loadFile(isDev ? './app/loading.html' : path.join(__dirname, './loading.html'))
   loading.once('ready-to-show', () => {
     loading.show()
   })
@@ -135,7 +135,7 @@ const aboutWindow = (topWin) => {
     }
   })
   about.setMenu(null)
-  about.loadFile(isDev ? './electron/about.html' : path.join(__dirname, '../electron/about.html'))
+  about.loadFile(isDev ? './app/about.html' : path.join(__dirname, './about.html'))
   about.show()
 
   about.on('close', () => topWin.show())

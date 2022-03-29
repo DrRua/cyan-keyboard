@@ -10,5 +10,8 @@ export default defineConfig({
     },
   },
   base: process.env.ELECTRON == 'true' ? './' : '',
-  plugins: [vue()]
+  plugins: [vue()],
+  build: {
+    outDir: 'app/dist'
+  }
 })
