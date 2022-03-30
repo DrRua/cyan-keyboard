@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted, onActivated, watch } from 'vue'
 import { keyList, getKeyChartOption } from './use-option'
 import { dateJsInstance } from '@/utils/jedate'
 import dayjs from 'dayjs'
@@ -48,6 +48,10 @@ onMounted(() => {
       setOption('date')
     }
   })
+})
+
+onActivated(() => {
+  resizeChart()
 })
 
 const setOption = (type = 'all') => {

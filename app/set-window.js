@@ -104,8 +104,8 @@ const showLoading = () => {
   loading = new BrowserWindow({
     show: false,
     frame: false, // 无边框（窗口、工具栏等），只包含网页内容
-    width: 160,
-    height: 180,
+    width: 256,
+    height: 256,
     resizable: false,
     transparent: true, // 窗口是否支持透明，如果想做高级效果最好为true
   })
@@ -123,7 +123,7 @@ const aboutWindow = (topWin) => {
     parent: topWin,
     modal: true,
     width: 300,
-    height: 300,
+    height: 200,
     icon: nativeImage.createFromPath(null),
     autoHideMenuBar: true,
     resizable: false,
@@ -131,7 +131,8 @@ const aboutWindow = (topWin) => {
     minimizable: false,
     maximizable: false,
     webPreferences: {
-      devTools: false
+      devTools: false,
+      preload: path.join(__dirname, 'preload.js')
     }
   })
   about.setMenu(null)

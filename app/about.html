@@ -1,12 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="assets/mocan.ico" />
   <title>关于</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      white-space: nowrap;
+    }
+
+    .title {
+      text-align: center;
+      color: rgb(0, 86, 136);
+      font-size: 24px;
+      margin: 16px 0 8px 0;
+      font-family: cursive, sans-serif;
+    }
+    .info-box {
+      padding: 8px 16px;
+    }
+    .info-box span {
+      color: #666666;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>关于</h1>
+  <h1 class="title">Mocan Keyboard</h1>
+  <div class="info-box">
+    <h5>版本：<span class="app-version"></span></h5>
+    <h5>electron：<span class="electron-version"></span></h5>
+    <h5>node：<span class="node-version"></span></h5>
+    <h5>v8：<span class="v8-version"></span></h5>
+    <h5>chrome：<span class="chrome-version"></span></h5>
+  </div>
+
+  <script type="text/javascript">
+    const verList = ['electron', 'node', 'v8', 'chrome']
+    const versions = window.$electron.versions
+    verList.forEach(v => {
+      document.querySelector(`.${v}-version`).innerHTML = versions[v]
+    })
+    window.$electron.sendMsg({
+      handler: 'getVsersion'
+    })
+    window.$electron.onMessage('getVsersion', (e, arg) => {
+      document.querySelector('.app-version').innerHTML = arg.msg
+    })
+  </script>
 </body>
+
 </html>

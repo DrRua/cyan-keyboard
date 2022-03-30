@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, onMounted, onActivated, watch } from 'vue'
 import { getDateChartOption } from './use-option'
 import { dateJsInstance } from '@/utils/jedate'
 import dayjs from 'dayjs'
@@ -50,6 +50,10 @@ onMounted(() => {
   })
 })
 
+onActivated(() => {
+  resizeChart()
+})
+
 const setOption = (type = 'all') => {
   if (!dateChart) return
   const allDate = Object.keys(state.allData).map(date => date.split('-')[0])
@@ -72,16 +76,15 @@ const setOption = (type = 'all') => {
     })
     state.dateChartOption.series[0].data = yData
   } else if (type === 'date') {
-    const filterData = Object.keys(state.allData).filter(date => {
+    const _FD = Object.keys(state.allData).filter(date => {
       return date.split('-')[0] === state.selectDate
     })
-    const endDate = dayjs(filterData[filterData.length - 1].replace('-', '') + '0000')
-    const startDate = dayjs(filterData[0].replace('-', '') + '0000')
-    const diffDate = endDate.diff(startDate, 'hour')
+    const endDate = dayjs(_FD.length ? _FD[_FD.length - 1].replace('-', '') + '0000' : '')
+    const startDate = dayjs(_FD.length ? _FD[0].replace('-', '') + '0000' : '')
+    const diffDate = endDate.diff(startDate, 'hour') || _FD.length || 0
     const xData = Array(diffDate).fill(null).map((date, index) => {
       return startDate.add(index, 'hour').format('YYYYMMDD-HH')
     })
-    // const xData = filterData.map(date => dayjs(date.replace('-', '')).format('MM-DD H'))
     const yData = xData.map(date => Object.keys(state.allData[date] || {}).length)
     state.dateChartOption.xAxis.data = xData.map(item => dayjs(item.replace('-', '') + '0000').format('MM-DD H'))
     state.dateChartOption.series[0].data = yData

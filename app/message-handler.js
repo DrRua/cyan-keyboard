@@ -18,6 +18,10 @@ ipcMain.on('message', async (event, arg) => {
 
 // 消息处理方法
 const handler = {
+  getVsersion: async () => {
+    const version = app.getVersion()
+    return version
+  },
   // 关闭所有窗口
   closeWin: async (win = {}) => win.close(),
   // 退出程序
