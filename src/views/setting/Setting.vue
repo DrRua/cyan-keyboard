@@ -14,7 +14,7 @@
             v-model="state.key"
             readonly
             type="text"
-            placeholder="请按下绑定键"
+            placeholder="绑定键"
           />
           <span
             class="lock-icon"
