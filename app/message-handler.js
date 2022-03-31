@@ -1,5 +1,5 @@
 const { app, ipcMain } = require('electron')
-const { bindKeyMethod, unBindKey, unBindAll } = require('./key-evnet')
+const { bindKeyMethod, unBindKey, unBindAll, bindMouseClick } = require('./key-evnet')
 const { store, configStore } = require('./file-store')
 const { getCurrWin, aboutWindow } = require('./set-window')
 
@@ -85,6 +85,13 @@ const handler = {
     const savedKey = configStore.get('key-bind') || []
     const val = savedKey.find(k => k.key === key)
     return val || savedKey
+  },
+  // 绑定鼠标连点
+  mouseClick: async (win, arg) => {
+    const key = arg.key || 'p'
+    const timeout = arg.timeout || 300
+    const result = bindMouseClick(key, timeout)
+    return result
   }
 }
 // 所有已注册方法列表

@@ -60,6 +60,7 @@
         />
       </div>
     </div>
+    <SettingMouse />
   </div>
 </template>
 
@@ -67,13 +68,14 @@
 import { ref, reactive, onMounted, onDeactivated, onActivated } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import message from '@/utils/message'
+import SettingMouse from './SettingMouse.vue'
 
 const router = useRouter()
 const route = useRoute()
 const state = reactive({
   isLock: false,
   key: '',
-  timeout: 500,
+  timeout: 200,
   inputStr: '',
   testInput: '',
 })

@@ -38,7 +38,7 @@ const bindKeyMethod = (key, input, timeout = 300) => {
   if (!key) return
   const accelerator = `Ctrl+Alt+${key}`
   const isRegist = globalShortcut.isRegistered(accelerator)
-  if (isRegist) unBindKey(accelerator)
+  if (isRegist) unBindKey(key)
   const result = globalShortcut.register(accelerator, () => {
     const inputStr = input.split('')
     if (!inputStr.length) return
@@ -83,10 +83,37 @@ const tapKey = (keys, timeout) => {
   }, timeout)
 }
 
+let intervalClick = null
+// 绑定鼠标连点
+const bindMouseClick = (key, timeout = 300) => {
+  if (!key) return
+  const accelerator = `Ctrl+Alt+${key}`
+  const isRegist = globalShortcut.isRegistered(accelerator)
+  if (isRegist) unBindKey(key)
+  const result = globalShortcut.register(accelerator, () => {
+    if (intervalClick !== null) {
+      clearInterval(intervalClick)
+      intervalClick = null
+    } else {
+      setTimeout(() => {
+        mouseClick(timeout)
+      }, 300)
+    }
+  })
+  return result
+}
+// 鼠标连点
+const mouseClick = (timeout) => {
+  intervalClick = setInterval(() => {
+    robotjs.mouseClick()
+  }, timeout)
+}
+
 module.exports = {
   ioHook,
   store,
   bindKeyMethod,
   unBindKey,
   unBindAll,
+  bindMouseClick,
 }
