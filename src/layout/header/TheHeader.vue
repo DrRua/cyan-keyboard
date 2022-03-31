@@ -14,7 +14,7 @@
         >
           <li
             class="pop-item"
-            @click="menuClick($event)"
+            @click="menuClick($event, 'getStorePath')"
           >存储路径</li>
           <li
             class="pop-item"
@@ -38,7 +38,7 @@
         >
           <li
             class="pop-item"
-            @click="menuClick($event)"
+            @click="menuClick($event, 'checkUpdate')"
           >检查更新</li>
           <li
             class="pop-item"
@@ -58,6 +58,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import TheTools from './TheTools.vue'
+import message from '@/utils/message'
 
 const TheToolsRef = ref(null)
 const spaceDivRef = ref(null)
@@ -115,15 +116,17 @@ const menuClick = (e, arg) => {
   const type = arg
   if (!type) return
   switch (type) {
-    case 'closeWin': window.$electron.sendMsg({ handler: type })
-      break
-    case 'exitApp': window.$electron.sendMsg({ handler: type })
+    case 'checkUpdate': message.error('功能还未实现o(╥﹏╥)o')
       break
     default: window.$electron.sendMsg({ handler: type })
   }
   closeMenu()
 }
 
+window.$electron.onMessage('getStorePath', (e, arg) => {
+  const path = arg.msg
+  message.success(path)
+})
 window.$electron.onMessage('winMove', () => closeMenu())
 window.$electron.onMessage('maxScreen', () => closeMenu())
 window.$electron.onMessage('minScreen', () => closeMenu())
