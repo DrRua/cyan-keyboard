@@ -264,18 +264,43 @@
         data-key="Ctrl"
       >Ctrl</div>
     </div>
+    <h1 class="title">绑定快捷键</h1>
+    <ul
+      v-show="state.keyBindList.length"
+      class="key-bind-list">
+      <li
+        v-for="key in state.keyBindList"
+        :key="key.key"
+        class="key-bind-item"
+      >
+        <div class="key bind-key">Ctrl + Alt + {{ key.key }}</div>
+        <div class="key bind-key">{{ key.input }}</div>
+        <div class="key bind-key time-key">{{ key.timeout }}</div>
+        <div
+          class="bind-button"
+          @click="showBind(key)"
+        >修改绑定</div>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted, onActivated } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const state = reactive({
+  keyBindList: []
+})
 
 onMounted(() => {
+  getBindInfo()
   const keys = document.querySelectorAll('.key')
   keys.forEach((k) => k.addEventListener('transitionend', unPress))
 })
 
-function unPress(e) {
+function unPress (e) {
   if (e.propertyName === 'transform') this.classList.remove('pressed')
 }
 
@@ -296,212 +321,27 @@ const handleKeyDown = (e, type) => {
   key && key.classList[handler]('pressed')
 }
 
+// 获取存储的绑定信息
+const getBindInfo = () => {
+  window.$electron.sendMsg({ handler: 'getBindKey' })
+}
+window.$electron.onMessage('getBindKey', (e, arg) => {
+  const data = arg.msg || []
+  state.keyBindList = data
+})
+getBindInfo()
+
+// 修改绑定快捷键
+const showBind = (info) => {
+  router.push({ name: 'Setting', params: { ...info } })
+}
+
+onActivated(() => {
+  getBindInfo()
+})
+
 </script>
 
 <style lang="scss" scoped>
-.keyboard {
-  --keyboard-key-color: #8a94a4;
-
-  display: grid;
-  grid-template-columns: repeat(30, 2.7%);
-  grid-template-rows: repeat(5, 4.75vw);
-  grid-gap: 0.9vw 0.65%;
-  padding: 20px;
-  background-color: transparent;
-  .key {
-    border-radius: 0.76vw;
-    grid-column: auto/span 2;
-    width: 100%;
-    height: 100%;
-    padding: 0.475vw;
-    font-size: 1.9vw;
-    display: grid;
-    align-items: center;
-    color: var(--keyboard-key-color);
-    justify-content: center;
-    cursor: pointer;
-    background: #d8dee8;
-    transition: all 100ms cubic-bezier(0.09, 0.32, 0.34, 2);
-    user-select: none;
-    &:hover, &.pressed {
-      transform: perspective(300px) scale(0.97);
-      box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #f6f8fa, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #c2ccdb;
-      color: #fff;
-      text-shadow: 0 0 10px #f7f9fa, 0 0 15px #f7f9fa, 0 0 20px #f7f9fa;
-    }
-    &.dotted {
-      position: relative;
-      &::before {
-        content: '_';
-        font-weight: bold;
-        color: #b5c0d2;
-        position: absolute;
-        top: 70%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    }
-
-    &.esc {
-      background: #ed4c67;
-      color: #fbdbe1;
-      &:hover, &.pressed {
-        transform: perspective(300px) scale(0.97);
-        box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #f38e9f, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #c71432;
-        color: #fff;
-        text-shadow: 0 0 10px #f59eac, 0 0 15px #f59eac, 0 0 20px #f59eac;
-      }
-    }
-
-    &.back {
-      background: #d63031;
-      color: #f7d6d6;
-      &:hover, &.pressed {
-        transform: perspective(300px) scale(0.97);
-        box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #e57c7d, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #991e1f;
-        color: #fff;
-        text-shadow: 0 0 10px #e88f90, 0 0 15px #e88f90, 0 0 20px #e88f90;
-      }
-    }
-
-    &.shift {
-      background: #1e90ff;
-      color: #d2e9ff;
-      &:hover, &.pressed {
-        transform: perspective(300px) scale(0.97);
-        box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #71b9ff, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #0065c8;
-        color: #fff;
-        text-shadow: 0 0 10px #85c3ff, 0 0 15px #85c3ff, 0 0 20px #85c3ff;
-      }
-    }
-
-    &.control {
-      background: #be2edd;
-      color: #f2d5f8;
-      &:hover, &.pressed {
-        transform: perspective(300px) scale(0.97);
-        box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #d57be9, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #891aa1;
-        color: #fff;
-        text-shadow: 0 0 10px #db8eec, 0 0 15px #db8eec, 0 0 20px #db8eec;
-      }
-    }
-
-    &.win {
-      background: #f7b731;
-      color: #fdf1d6;
-      &:hover, &.pressed {
-        transform: perspective(300px) scale(0.97);
-        box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #fad17d, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #c78908;
-        color: #fff;
-        text-shadow: 0 0 10px #fad890, 0 0 15px #fad890, 0 0 20px #fad890;
-      }
-    }
-
-    &.alt {
-      background: #5352ed;
-      color: #dddcfb;
-      &:hover, &.pressed {
-        transform: perspective(300px) scale(0.97);
-        box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #9291f3, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #1615ca;
-        color: #fff;
-        text-shadow: 0 0 10px #a2a1f5, 0 0 15px #a2a1f5, 0 0 20px #a2a1f5;
-      }
-    }
-
-    &.fn {
-      background: #26de81;
-      color: #d4f8e6;
-      &:hover, &.pressed {
-        transform: perspective(300px) scale(0.97);
-        box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #76eaaf, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #189e5a;
-        color: #fff;
-        text-shadow: 0 0 10px #8aedbb, 0 0 15px #8aedbb, 0 0 20px #8aedbb;
-      }
-    }
-
-    &.cap {
-      background: #ee5a24;
-      color: #fcded3;
-      position: relative;
-      &:hover, &.pressed {
-        transform: perspective(300px) scale(0.97);
-        box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #f49675, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #b23a0e;
-        color: #fff;
-        text-shadow: 0 0 10px #f6a588, 0 0 15px #f6a588, 0 0 20px #f6a588;
-      }
-      &::before {
-        content: '';
-        position: absolute;
-        width: 0.5vw;
-        height: 0.5vw;
-        background: #f6ac91;
-        top: 1vw;
-        right: 1vw;
-        border-radius: 50%;
-      }
-      &.on::before {
-        background: #fbded3;
-        box-shadow: 0 0 0.5vw 0.2vw rgba(255,255,255,0.8);
-      }
-    }
-
-    &.tab {
-      background: #12cbc4;
-      color: #cafaf8;
-      &:hover, &.pressed {
-        transform: perspective(300px) scale(0.97);
-        box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #5aede7, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #0d8e89;
-        color: #fff;
-        text-shadow: 0 0 10px #72f0eb, 0 0 15px #72f0eb, 0 0 20px #72f0eb;
-      }
-    }
-
-    &.enter {
-      background: #fdcb6e;
-      color: #fff5e2;
-      &:hover, &.pressed {
-        transform: perspective(300px) scale(0.97);
-        box-shadow: inset -0.316666666666667vw -0.316666666666667vw 0.95vw -0.158333333333333vw #fddea3, inset 0.316666666666667vw 0.316666666666667vw 0.633333333333333vw #fba403;
-        color: #fff;
-        text-shadow: 0 0 10px #fde2b0, 0 0 15px #fde2b0, 0 0 20px #fde2b0;
-      }
-    }
-
-    &.s2 {
-      font-size: 1.727272727272727vw;
-      grid-column: auto/span 2;
-    }
-    &.s3 {
-      font-size: 1.727272727272727vw;
-      grid-column: auto/span 3;
-    }
-    &.s4 {
-      font-size: 1.727272727272727vw;
-      grid-column: auto/span 4;
-    }
-    &.s5 {
-      font-size: 1.727272727272727vw;
-      grid-column: auto/span 5;
-    }
-    &.s6 {
-      font-size: 1.727272727272727vw;
-      grid-column: auto/span 6;
-    }
-    &.s12 {
-      font-size: 1.727272727272727vw;
-      grid-column: auto/span 12;
-    }
-    &.down {
-      grid-column: auto/span 4;
-    }
-    &[on-shift] {
-      font-size: 1.461538461538461vw;
-      justify-items: center;
-    }
-    &[on-shift]::before {
-      content: attr(on-shift);
-      align-items: end;
-    }
-  }
-}
+@import './home.scss';
 </style>

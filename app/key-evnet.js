@@ -1,19 +1,10 @@
 
-const { app } = require('electron')
+const { app, globalShortcut } = require('electron')
 const ioHook = require('iohook')
-const Store = require('electron-store')
+const robotjs = require('robotjs')
+const { store, configStore } = require('./file-store')
 const { getKey } = require('./key-map')
 const dayjs = require('dayjs')
-
-const option = {
-  name: 'key-record', // 文件名称,默认 config
-  fileExtension: 'json', // 文件后缀,默认json
-  cwd: app.getPath('userData'), // 文件位置,尽量不要动
-  // encryptionKey:'aes-256-cbc' , // 对配置文件进行加密
-  clearInvalidConfig: true, // 发生 SyntaxError  则清空配置,
-}
-
-const store = new Store(option)
 
 // 监听键盘事件
 ioHook.on('keyup', (event) => {
@@ -33,7 +24,7 @@ ioHook.on('keydown', (event) => {
   let keyName = getKey(code) // 键名
   renderKey('keydown', keyName, code)
 })
-
+// 发送键盘事件消息到页面
 const renderKey = (type, keyName, code) => {
   if (!keyName) return false
   const { sendMsg } = require('./message-handler')
@@ -42,7 +33,60 @@ const renderKey = (type, keyName, code) => {
 
 ioHook.start()
 
+// 注册全局快捷键绑定事件
+const bindKeyMethod = (key, input, timeout = 300) => {
+  if (!key) return
+  const accelerator = `Ctrl+Alt+${key}`
+  const isRegist = globalShortcut.isRegistered(accelerator)
+  if (isRegist) unBindKey(accelerator)
+  const result = globalShortcut.register(accelerator, () => {
+    const inputStr = input.split('')
+    if (!inputStr.length) return
+    setTimeout(() => {
+      tapKey(inputStr, timeout)
+    }, 300)
+  })
+  if (result) {
+    const savedKey = configStore.get('key-bind')
+    const saveData = savedKey || []
+    saveData.push({ key, input, timeout })
+    configStore.set('key-bind', saveData)
+  }
+  return result
+}
+// 取消绑定快捷键事件
+const unBindKey = (key) => {
+  const accelerator = `Ctrl+Alt+${key}`
+  const result = globalShortcut.unregister(accelerator)
+  const saveData = configStore.get('key-bind')
+  const delIndex = saveData.findIndex(k => k.key === key)
+  if (delIndex > -1) saveData.splice(delIndex, 1)
+  configStore.set('key-bind', saveData)
+  return result
+}
+
+// 取消所有绑定
+const unBindAll = () => {
+  const result = globalShortcut.unregisterAll()
+  configStore.delete('key-bind')
+  return result
+}
+
+// 输入按键
+const tapKey = (keys, timeout) => {
+  if (!keys.length) return
+  const nextKey = keys[0]
+  setTimeout(() => {
+    robotjs.keyTap(nextKey)
+    keys.shift()
+    tapKey(keys, timeout)
+  }, timeout)
+}
+
 module.exports = {
   ioHook,
-  store
+  store,
+  bindKeyMethod,
+  unBindKey,
+  unBindAll,
 }

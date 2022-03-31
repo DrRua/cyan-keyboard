@@ -8,5 +8,4 @@
 </script>
 
 <style>
-@import './styles/index.scss'
 </style>

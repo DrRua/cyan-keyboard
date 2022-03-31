@@ -108,9 +108,8 @@ const showLoading = () => {
     height: 256,
     resizable: false,
     transparent: true, // 窗口是否支持透明，如果想做高级效果最好为true
+    icon: nativeImage.createFromPath(iconPath),
   })
-  // 设置任务栏图标
-  loading.setIcon(nativeImage.createFromPath(iconPath))
   loading.loadFile(isDev ? './app/loading.html' : path.join(__dirname, './loading.html'))
   loading.once('ready-to-show', () => {
     loading.show()
@@ -124,7 +123,7 @@ const aboutWindow = (topWin) => {
     modal: true,
     width: 300,
     height: 200,
-    icon: nativeImage.createFromPath(null),
+    icon: nativeImage.createFromPath(iconPath),
     autoHideMenuBar: true,
     resizable: false,
     fullscreenable: false,

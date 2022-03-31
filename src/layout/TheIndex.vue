@@ -68,14 +68,14 @@ onMounted(() => {
   }
   &[data-theme='light'] {
     ::v-deep(div) {
-      .title, .date-input, .button {
+      .title, .date-input, .button, .key {
         color: var(--menu-text-color);
       }
     }
   }
   &[data-theme='dark'] {
     ::v-deep(div) {
-      .title, .date-input, .button {
+      .title, .date-input, .button, .key {
         color: #FFF;
       }
     }

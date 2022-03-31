@@ -1,6 +1,6 @@
 const { app, ipcMain } = require('electron')
-const robotjs = require('robotjs')
-const { store } = require('./key-evnet')
+const { bindKeyMethod, unBindKey, unBindAll } = require('./key-evnet')
+const { store, configStore } = require('./file-store')
 const { getCurrWin, aboutWindow } = require('./set-window')
 
 // 接收渲染进程消息
@@ -18,6 +18,7 @@ ipcMain.on('message', async (event, arg) => {
 
 // 消息处理方法
 const handler = {
+  // 获取版本
   getVsersion: async () => {
     const version = app.getVersion()
     return version
@@ -40,6 +41,7 @@ const handler = {
     else win.minimize()
     return 'success'
   },
+  // 重新加载页面
   winReload: async (win = {}) => win.reload(),
   // 查看关于窗口
   showAbout: async (win = {}) => {
@@ -50,11 +52,6 @@ const handler = {
     const list = win.webContents.getPrinters()
     return list
   },
-  // 设置鼠标位置
-  setMouse: async () => {
-    robotjs.dragMouse(100, 100)
-    robot.mouseClick()
-  },
   // 获取存储路径
   getStorePath: async () => {
     const path = store.path
@@ -64,6 +61,30 @@ const handler = {
   getStoreData: async () => {
     const data = store.store
     return data
+  },
+  // 绑定快捷键
+  bindKey: async (win, arg) => {
+    const { key, input, timeout } = arg
+    const result = bindKeyMethod(key, input, timeout)
+    return result
+  },
+  // 取消绑定
+  unBindKey: async (win, arg) => {
+    const { key } = arg
+    const result = unBindKey(key)
+    return result
+  },
+  // 取消所有绑定
+  unBindKeyAll: async () => {
+    const result = unBindAll()
+    return result
+  },
+  // 获取绑定信息
+  getBindKey: async (win, arg) => {
+    const key = arg.key || ''
+    const savedKey = configStore.get('key-bind') || []
+    const val = savedKey.find(k => k.key === key)
+    return val || savedKey
   }
 }
 // 所有已注册方法列表
