@@ -160,7 +160,7 @@ header {
     height: 100%;
     line-height: var(--header-height);
     background-image: url(../../assets/mocan.ico);
-      width: 30px;
+    width: 30px;
     background-position: center;
     background-size: contain;
     margin: 0 10px 0 6px;
