@@ -75,7 +75,7 @@ const route = useRoute()
 const state = reactive({
   isLock: false,
   key: '',
-  timeout: 200,
+  timeout: 400,
   inputStr: '',
   testInput: '',
 })

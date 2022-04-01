@@ -20,6 +20,8 @@ app.setUserTasks([
 app.whenReady().then(() => {
   createWindow(app)
 
+  const { initBindAll } = require('./key-evnet')
+  initBindAll()
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })

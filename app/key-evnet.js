@@ -33,6 +33,14 @@ const renderKey = (type, keyName, code) => {
 
 ioHook.start()
 
+// 注册所有已绑定快捷键
+const initBindAll = (list) => {
+  const savedKey = configStore.get('key-bind') || []
+  savedKey.forEach(k => {
+    bindKeyMethod(k.key, k.input, k.timeout)
+  })
+}
+
 // 注册全局快捷键绑定事件
 const bindKeyMethod = (key, input, timeout = 300) => {
   if (!key) return
@@ -49,6 +57,8 @@ const bindKeyMethod = (key, input, timeout = 300) => {
   if (result) {
     const savedKey = configStore.get('key-bind')
     const saveData = savedKey || []
+    const delIndex = saveData.findIndex(k => k.key === key)
+    if (delIndex > -1) saveData.splice(delIndex, 1)
     saveData.push({ key, input, timeout })
     configStore.set('key-bind', saveData)
   }
@@ -112,6 +122,7 @@ const mouseClick = (timeout) => {
 module.exports = {
   ioHook,
   store,
+  initBindAll,
   bindKeyMethod,
   unBindKey,
   unBindAll,

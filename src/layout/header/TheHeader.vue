@@ -7,7 +7,7 @@
         @click="toggleMenu('setting')"
         @mouseenter="moveMenu('setting')"
       >
-        <span class="menu-label">设置</span>
+        <span class="menu-label">文件</span>
         <ul
           v-show="state.menuShow.setting"
           class="menu-pop-list"
@@ -47,21 +47,19 @@
         </ul>
       </div>
     </div>
-    <div
-      ref="spaceDivRef"
-      class="space-div"
-    />
+    <div class="space-div">{{ route.meta.title }}</div>
     <TheTools ref="TheToolsRef" />
   </header>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
+import { useRoute } from 'vue-router'
 import TheTools from './TheTools.vue'
 import message from '@/utils/message'
 
 const TheToolsRef = ref(null)
-const spaceDivRef = ref(null)
+const route = useRoute()
 const state = reactive({
   menuShow: {
     setting: false,
@@ -212,5 +210,7 @@ header {
   flex: 1;
   height: 100%;
   width: 100%;
+  text-align: center;
+  line-height: var(--header-height);
 }
 </style>

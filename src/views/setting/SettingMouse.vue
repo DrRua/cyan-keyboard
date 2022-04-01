@@ -33,7 +33,7 @@ import message from '@/utils/message'
 const state = reactive({
   isLock: false,
   key: 'P',
-  timeout: 500,
+  timeout: 200,
   inputStr: '',
   testInput: '',
 })
