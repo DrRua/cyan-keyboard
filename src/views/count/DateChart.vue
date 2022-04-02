@@ -57,11 +57,11 @@ onActivated(() => {
 const setOption = (type = 'all') => {
   if (!dateChart) return
   const allDate = Object.keys(state.allData).map(date => date.split('-')[0])
-  if (!allDate.length) return
   if (type === 'all') {
     const endDate = dayjs(allDate[allDate.length - 1])
     const startDate = dayjs(allDate[0])
-    const diffDate = endDate.diff(startDate, 'day') || allDate.length || 0
+    const calcDate = Math.floor(endDate.diff(startDate, 'hour') / 24)
+    const diffDate = calcDate > 0 ? calcDate + 1 : allDate.length || 0
     const xData = Array(diffDate).fill(null).map((date, index) => {
       return startDate.add(index, 'day').format('YYYY-MM-DD')
     })

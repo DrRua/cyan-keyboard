@@ -28,7 +28,7 @@ const setTray = (iconPath, createWindow) => {
   ])
   tray.setContextMenu(contextMenu)
   // 通知栏tooltip
-  tray.setToolTip('This is my application')
+  tray.setToolTip('莫灿')
   // 通知栏点击事件
   tray.addListener('click', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

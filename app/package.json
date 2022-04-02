@@ -2,7 +2,7 @@
   "name": "mocan-keyboard",
   "author": "mocan",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "main.js",
   "scripts": {
     "build": "electron-builder"
