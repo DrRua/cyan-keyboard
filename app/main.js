@@ -4,6 +4,7 @@ const { showLoading, createWindow } = require('./set-window')
 require('./message-handler')
 require('./key-evnet')
 
+// 判断是否已有一个打开的进程
 const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
   app.quit()
