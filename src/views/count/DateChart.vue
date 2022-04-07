@@ -70,9 +70,9 @@ const setOption = (type = 'all') => {
       const dayDate = Object.keys(state.allData).filter(date => {
         return item.match(/\d+/g).join('') === date.split('-')[0]
       }).map(item => Object.keys(state.allData[item]).length)
-      return dayDate.reduce((p, n) => {
+      return dayDate.length ? dayDate.reduce((p, n) => {
         return p + n
-      })
+      }) : 0
     })
     state.dateChartOption.series[0].data = yData
   } else if (type === 'date') {

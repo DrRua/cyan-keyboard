@@ -4,6 +4,16 @@ const { showLoading, createWindow } = require('./set-window')
 require('./message-handler')
 require('./key-evnet')
 
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    else app.focus()
+  })
+}
+
 // 任务栏右键菜单
 app.setUserTasks([
   {
