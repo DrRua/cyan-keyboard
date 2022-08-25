@@ -1,7 +1,7 @@
 <template>
 
   <div class="setting-box">
-    <h3 class="h3-title">绑定鼠标连点</h3>
+    <h3 class="h3-title">绑定鼠标连点（第二次为取消连点）</h3>
     <div class="key-box">
       <div class="key ctrl-key">Ctrl</div>
       <div class="add">+</div>

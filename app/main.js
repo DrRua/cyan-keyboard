@@ -36,6 +36,9 @@ app.whenReady().then(() => {
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  const { clearOutdated } = require('./file-store')
+  clearOutdated()
 })
 
 app.on('ready', () => {

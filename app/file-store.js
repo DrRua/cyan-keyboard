@@ -1,6 +1,7 @@
 
 const { app } = require('electron')
 const Store = require('electron-store')
+const dayjs = require('dayjs')
 // 键盘记录存储文件
 const option = {
   name: 'key-record', // 文件名称,默认 config
@@ -20,7 +21,16 @@ const configOption = {
 }
 const configStore = new Store(configOption)
 
+const clearOutdated = () => {
+  const allData = store.store || {}
+  const now = dayjs().format('YYYYMMDD')
+  Object.keys(allData).forEach(item => {
+    if (now - item.slice(0, 8) > 90) store.delete(item)
+  })
+}
+
 module.exports = {
   store,
   configStore,
+  clearOutdated,
 }
