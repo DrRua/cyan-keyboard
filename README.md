@@ -4,6 +4,10 @@
 
 # 运行截图
 
+## 下载
+
+[版本下载](https://github.com/Limbocan/cyan-keyboard/releases)
+
 ## 首页
 - 键盘输入监听功能校验
 - 展示已绑定快捷键
